@@ -2,7 +2,8 @@ import os
 
 # File paths
 PRODUCTS_FILE = "product.txt"
-
+SUPPLIERS_FILE = "suppliers.txt"
+ORDERS_FILE = "orders.txt"
 # File utility functions
 def read_file(file_path):
     """Read the contents of a file, creating it if it doesn't exist."""
