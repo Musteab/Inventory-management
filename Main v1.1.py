@@ -143,13 +143,48 @@ def up_products():
         else:
             print("Invalid choice.")
 
+def view(file_path):
+    data = read_file(file_path)
+    if not data:
+        print("File is empty")
+    else:
+        print(file_path)
+        for line in data:
+            print(line)
+            
+def view_inventory():
+    while True:
+        print("View Inventory")
+        print("\nSelect which File you want to view")
+        print("[1] Products File")
+        print("[2] Suppliers File")
+        print("[3] Orders File")
+        print("[4] Back to Main Menu")
+
+        choice=input("Enter your choice:")
+        if choice== '1':
+            view(PRODUCTS_FILE)
+        elif choice== '2':
+            view(SUPPLIERS_FILE)
+        elif choice== '3':
+            view(ORDERS_FILE)
+        elif choice== '4':
+            break
+        else:
+            print("Invalid. Choose a valid option")
+            
+
+
+    
+
 # Main function to run the program
 def main():
     while True:
         print("\nInventory Management System")
         print("[1] Add a new product")
         print("[2] Update a product")
-        print("[3] Exit")
+        print("[3] View Inventory")
+        print("[4] Exit")
 
         try:
             selection = int(input("Enter your choice: "))
@@ -158,6 +193,8 @@ def main():
             elif selection == 2:
                 up_products()
             elif selection == 3:
+                view()
+            elif selection == 4:
                 print("Exiting the program. Thank you!")
                 break
             else:
