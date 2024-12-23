@@ -30,7 +30,7 @@ def read_products(file_path):
             for line in file:
                 product_data = line.strip().split(", ")
                 if len(product_data) > 0:
-                    product_id = product_data[0].upper()
+                    product_id = product_data[0]
                     products[product_id] = product_data
     except FileNotFoundError:
         # If the file doesn't exist, return an empty dictionary.
@@ -43,9 +43,9 @@ def add_products():
     existing_products = read_products(PRODUCTS_FILE)
 
     while True:
-        product_id = input("Please enter the 7-character product ID (e.g., PID0001): ").upper()
-        if len(product_id) != 7 or not product_id.startswith('PID') or not product_id[3:].isdigit():
-            print("Invalid format. Correct format: 'PID' followed by 4 digits (e.g., PID0001).")
+        product_id = "PID" + input("Please enter the 4-digit product ID (e.g. 0001):")
+        if len(product_id) != 7 or not product_id[3:].isdigit():
+            print("Invalid format. Correct format: 4 digit ID (e.g. 0001).")
         elif product_id in existing_products:
             print("Product ID already exists. Please enter a unique Product ID.")
         else:
@@ -88,7 +88,7 @@ def up_products():
         choice = input("Choose an option: ")
 
         if choice == '1':  # Update whole product
-            pid = input("Enter the PID of the product you wish to update: ")
+            pid = "PID" + input("Enter the PID of the product you wish to update: ")
             data = read_file(PRODUCTS_FILE)
             updated = False
 
@@ -117,7 +117,7 @@ def up_products():
                 print("PID not found.")
 
         elif choice == '2':  # Update specific detail
-            pid = input("Enter the PID of the product you wish to update: ")
+            pid = "PID" + input("Enter the PID of the product you wish to update: ")
             data = read_file(PRODUCTS_FILE)
             updated = False
 
