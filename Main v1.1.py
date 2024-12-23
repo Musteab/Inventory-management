@@ -213,7 +213,7 @@ def main():
             elif selection == 2:
                 up_products()
             elif selection == 3:
-                view()
+                view_inventory()
             elif selection == 4:
                 print("Exiting the program. Thank you!")
                 break
