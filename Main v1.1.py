@@ -22,12 +22,32 @@ def append_to_file(file_path, line):
     with open(file_path, "a") as file:
         file.write(line + "\n")
 
+def read_products(file_path):
+    """Read all products from the file and return a dictionary with product IDs as keys."""
+    products = {}
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                product_data = line.strip().split(", ")
+                if len(product_data) > 0:
+                    product_id = product_data[0].upper()
+                    products[product_id] = product_data
+    except FileNotFoundError:
+        # If the file doesn't exist, return an empty dictionary.
+        pass
+    return products
+
 # Function for adding products
 def add_products():
+
+    existing_products = read_products(PRODUCTS_FILE)
+
     while True:
-        product_id = input("Please enter the 7-character product ID (e.g., PID0001): ")
-        if len(product_id) != 7 or not product_id.upper().startswith('PID') or not product_id[3:].isdigit():
+        product_id = input("Please enter the 7-character product ID (e.g., PID0001): ").upper()
+        if len(product_id) != 7 or not product_id.startswith('PID') or not product_id[3:].isdigit():
             print("Invalid format. Correct format: 'PID' followed by 4 digits (e.g., PID0001).")
+        elif product_id in existing_products:
+            print("Product ID already exists. Please enter a unique Product ID.")
         else:
             break
 
