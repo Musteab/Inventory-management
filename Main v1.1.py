@@ -37,9 +37,9 @@ def read_products(file_path):
         pass
     return products
 
-# Function for adding products
-def add_products():
 
+def add_products():
+    """Function for adding products"""
     existing_products = read_products(PRODUCTS_FILE)
 
     while True:
@@ -66,16 +66,26 @@ def add_products():
             break
 
     while True:
+            try:
+                product_price = float(input("Enter the product price: "))
+                if product_price < 0:
+                    print("Price cannot be negative.")
+                else:
+                    break
+            except ValueError:
+                print("Invalid input. Price must be a number.")
+
+    while True:
         try:
-            product_price = float(input("Enter the product price: "))
-            if product_price < 0:
-                print("Price cannot be negative.")
+            product_quantity = int(input("Enter the product quantity: "))
+            if product_quantity < 0:
+                print("Quantity cannot be negative.")
             else:
                 break
         except ValueError:
-            print("Invalid input. Price must be a number.")
+            print("Invalid input. Quantity must be an integer.")
 
-    new_product = f"{product_id}, {product_name}, {product_description}, {product_price:.2f}"
+    new_product = f"{product_id}, Name: {product_name}, Description: {product_description}, Price: {product_price:.2f}, Quantity: {product_quantity}"
     append_to_file(PRODUCTS_FILE, new_product)
     print("Product added successfully!")
 
@@ -106,7 +116,16 @@ def up_products():
                                 break
                         except ValueError:
                             print("Invalid input. Price must be a number.")
-                    data[i] = f"{pid}, {product_name}, {product_description}, {product_price:.2f}"
+                    while True:
+                        try:
+                            product_quantity = int(input("Enter the updated product quantity: "))
+                            if product_quantity < 0:
+                                print("Quantity cannot be negative.")
+                            else:
+                                break
+                        except ValueError:
+                            print("Invalid input. Quantity must be a number.")
+                    data[i] = f"{pid}, Name: {product_name}, Description: {product_description}, Price: {product_price:.2f}, Quantity: {product_quantity}"
                     updated = True
                     break
 
@@ -127,12 +146,13 @@ def up_products():
                     print("1. Update Product Name")
                     print("2. Update Product Description")
                     print("3. Update Product Price")
+                    print("4. Update Product Quantity")
                     detail_choice = input("Choose the detail to update: ")
 
                     if detail_choice == '1':
-                        product_details[1] = input("Enter the updated product name: ").strip()
+                        product_details[1] ="Name: " + input("Enter the updated product name: ").strip()
                     elif detail_choice == '2':
-                        product_details[2] = input("Enter the updated product description: ").strip()
+                        product_details[2] = "Description: " + input("Enter the updated product description: ").strip()
                     elif detail_choice == '3':
                         while True:
                             try:
@@ -140,10 +160,21 @@ def up_products():
                                 if product_price < 0:
                                     print("Price cannot be negative.")
                                 else:
-                                    product_details[3] = f"{product_price:.2f}"
+                                    product_details[3] = f"Price: {product_price:.2f}"
                                     break
                             except ValueError:
                                 print("Invalid input. Price must be a number.")
+                    elif detail_choice == '4':
+                        while True:
+                            try:
+                                product_quantity = int(input("Enter the updated product quantity: "))
+                                if product_quantity < 0:
+                                    print("Quantity cannot be negative.")
+                                else:
+                                    product_details[4] = "Quantity: " + str(product_quantity)
+                                    break
+                            except ValueError:
+                                print("Invalid input. Quantity must be an integer.")
                     else:
                         print("Invalid choice.")
                         break
@@ -192,9 +223,53 @@ def view_inventory():
             break
         else:
             print("Invalid. Choose a valid option")
-            
 
+def read_suppliers(file_path):
+    """Read all suppliers from the file and return a dictionary with supplier IDs as keys."""
 
+    suppliers = {}
+    try:
+        with open(file_path, 'r') as file:
+            for line in file:
+                supplier_data = line.strip().split(", ")
+                if len(supplier_data) > 0:
+                    supplier_id = supplier_data[0]
+                    suppliers[supplier_id] = supplier_data
+    except FileNotFoundError:
+        # If the file doesn't exist, return an empty dictionary.
+        pass
+    return suppliers
+
+def add_supplier():
+    """Function to add suppliers"""
+    existing_suppliers = read_suppliers(SUPPLIERS_FILE)
+    
+    while True: #Loop for adding supplier ID
+        supplier_id = "SID" + input("Please enter the 4-digit supplier ID (e.g. 0001):")
+        if len(supplier_id) != 7 or not supplier_id[3:].isdigit():
+            print("Invalid format. Correct format: 4 digit ID (e.g. 0001).")
+        elif supplier_id in existing_suppliers:
+            print("Suppliers ID already exists. Please enter a unique Suppliers ID.")
+        else:
+            break
+    while True:
+        supplier_name = input("Enter the supplier name: ").strip()
+        if not supplier_name:
+            print("Supplier name cannot be empty.")
+        else:
+            break
+    while True:
+            try:
+                supplier_contact = "60" + input("Enter the supplier contact number: ")
+                if not len(supplier_contact) == 12 or not supplier_contact.isdigit:
+                    print("Contact number is invalid")
+                else:
+                    break
+            except ValueError:
+                print("Invalid input. Contact number must be a number.")
+    new_supplier = f"{supplier_id}, Name: {supplier_name}, Contact: {supplier_contact}"
+    append_to_file(SUPPLIERS_FILE, new_supplier)
+    print("Supplier added successfully!")
     
 
 # Main function to run the program
@@ -204,7 +279,8 @@ def main():
         print("[1] Add a new product")
         print("[2] Update a product")
         print("[3] View Inventory")
-        print("[4] Exit")
+        print("[4] Add Supplier")
+        print("[5] Exit")
 
         try:
             selection = int(input("Enter your choice: "))
@@ -215,6 +291,8 @@ def main():
             elif selection == 3:
                 view_inventory()
             elif selection == 4:
+                add_supplier()
+            elif selection == 5:
                 print("Exiting the program. Thank you!")
                 break
             else:
