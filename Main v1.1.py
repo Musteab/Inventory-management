@@ -303,7 +303,7 @@ def up_suppliers():
 
             if updated:
                 write_file(SUPPLIERS_FILE, [line + "\n" for line in data])
-                print("Product updated successfully!")
+                print("Supplier updated successfully!")
             else:
                 print("SID not found.")
 
