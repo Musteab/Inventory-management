@@ -278,8 +278,8 @@ def main():
         print("\nInventory Management System")
         print("[1] Add a new product")
         print("[2] Update a product")
-        print("[3] View Inventory")
-        print("[4] Add Supplier")
+        print("[3] Add Supplier")
+        print("[4] View Inventory")
         print("[5] Exit")
 
         try:
@@ -289,9 +289,10 @@ def main():
             elif selection == 2:
                 up_products()
             elif selection == 3:
-                view_inventory()
-            elif selection == 4:
                 add_supplier()
+               
+            elif selection == 4:
+                 view_inventory()
             elif selection == 5:
                 print("Exiting the program. Thank you!")
                 break
