@@ -370,7 +370,7 @@ def placeorder():
         print("Product ID not found.")
         return
 
-     order_id ="OID" +(input("Enter the id of the order"))
+    order_id ="OID" +(input("Enter the id of the order"))
     date = input("Enter the date of order (DD/MM/YYYY)")
     new_order = (f"{order_id}, Product ID: {product_id}, Quantity: {quantity}, Supplier ID: {supplier_id}, Date: {date})")
     append_to_file(ORDERS_FILE, new_order)
