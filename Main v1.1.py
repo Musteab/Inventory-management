@@ -374,6 +374,23 @@ def placeorder():
     date = input("Enter the date of order (DD/MM/YYYY)")
     new_order = (f"{order_id}, Product ID: {product_id}, Quantity: {quantity}, Supplier ID: {supplier_id}, Date: {date})")
     append_to_file(ORDERS_FILE, new_order)
+    updated=False
+    data=read_products(PRODUCTS_FILE)
+    for i, line in enumerate(data):
+        product=line.split(', ')
+        if product_id == product[0]:
+            ogquantity = product[4]
+            ogquantity = ogquantity.split(':')
+            ogquantitynum=int(ogquantity[1])
+            quantity+=ogquantitynum
+            product[4]='Quantity: '+ str(quantity)
+            data[i] = ", ".join(product)
+
+            updated=True
+            
+    if updated:
+                write_file(PRODUCTS_FILE, [line + "\n" for line in data])
+                print("Quantitiy updated successfully!")
 
     print("Order placed successfully!")
 
@@ -414,3 +431,6 @@ def main():
 
 if __name__ == "__main__":
     main()
+
+
+
