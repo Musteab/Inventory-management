@@ -261,7 +261,7 @@ def add_supplier():
     while True:
             try:
                 supplier_contact = "60" + input("Enter the supplier contact number: ")
-                if not len(supplier_contact) == 12 or not supplier_contact.isdigit():
+                if len(supplier_contact) != 12 or not supplier_contact.isdigit():
                     print("Contact number is invalid")
                 else:
                     break
@@ -291,7 +291,7 @@ def up_suppliers():
                     while True:
                         try:
                             supplier_contact = "60" + input("Enter the supplier contact number: ")
-                            if not len(supplier_contact) == 12 or not supplier_contact.isdigit:
+                            if len(supplier_contact) != 12 or not supplier_contact.isdigit:
                                 print("Contact number is invalid")
                             else:
                                 break
@@ -325,9 +325,10 @@ def up_suppliers():
                         while True:
                             try:
                                 supplier_contact = "60" + input("Enter the updated supplier contact number: ")
-                                if not len(supplier_contact) == 12 or not supplier_contact.isdigit:
+                                if len(supplier_contact) != 12 or not supplier_contact.isdigit:
                                     print("Contact number is invalid")
                                 else:
+                                    supplier_details[2] = "Contact: " + supplier_contact
                                     break
                             except ValueError:
                                 print("Invalid input. Contact number must be a number.")
@@ -411,7 +412,7 @@ def placeorder():
         write_file(PRODUCTS_FILE, [line + "\n" for line in data])
         print("Quantitiy updated successfully!")
     
-    new_order = (f"{order_id}, Product ID: {product_id}, Quantity: {quantity}, Supplier ID: {supplier_id}, Date: {date})")
+    new_order = (f"{order_ids}, Product ID: {product_id}, Quantity: {quantity}, Supplier ID: {supplier_id}, Date: {date})")
     append_to_file(ORDERS_FILE, new_order)
     print("Order placed successfully!")
 
