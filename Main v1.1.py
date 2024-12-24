@@ -287,7 +287,7 @@ def up_suppliers():
             for i, line in enumerate(data):
                 suppliers_details = line.split(", ")
                 if suppliers_details[0] == sid:
-                    supplier_name = input("Enter the updated product name: ").strip()
+                    supplier_name = input("Enter the updated supplier name: ").strip()
                     while True:
                         try:
                             supplier_contact = "60" + input("Enter the supplier contact number: ")
