@@ -271,6 +271,85 @@ def add_supplier():
     append_to_file(SUPPLIERS_FILE, new_supplier)
     print("Supplier added successfully!")
 
+# Function for updating suppliers.
+def up_suppliers():
+    while True:
+        print("1. Update whole supplier")
+        print("2. Update specific supplier details")
+        print("3. Exit")
+        choice = input("Choose an option: ")
+
+        if choice == '1':  # Update whole product
+            sid = "SID" + input("Enter the SID of the Supplier you wish to update: ")
+            data = read_file(SUPPLIERS_FILE)
+            updated = False
+
+            for i, line in enumerate(data):
+                suppliers_details = line.split(", ")
+                if suppliers_details[0] == sid:
+                    supplier_name = input("Enter the updated product name: ").strip()
+                    while True:
+                        try:
+                            supplier_contact = "60" + input("Enter the supplier contact number: ")
+                            if not len(supplier_contact) == 12 or not supplier_contact.isdigit:
+                                print("Contact number is invalid")
+                            else:
+                                break
+                        except ValueError:
+                            print("Invalid input. Contact number must be a number.")
+                    data[i] = f"{sid}, Name: {supplier_name}, Contact: {supplier_contact}"
+                    updated = True
+                    break
+
+            if updated:
+                write_file(SUPPLIERS_FILE, [line + "\n" for line in data])
+                print("Product updated successfully!")
+            else:
+                print("SID not found.")
+
+        elif choice == '2':  # Update specific detail
+            sid = "SID" + input("Enter the SID of the supplier you wish to update: ")
+            data = read_file(SUPPLIERS_FILE)
+            updated = False
+
+            for i, line in enumerate(data):
+                supplier_details = line.split(", ")
+                if supplier_details[0] == sid:
+                    print("1. Update Supplier Name")
+                    print("2. Update Supplier Contact")
+                    detail_choice = input("Choose the detail to update: ")
+
+                    if detail_choice == '1':
+                        supplier_details[1] ="Name: " + input("Enter the updated supplier name: ").strip()
+                    elif detail_choice == '2':
+                        while True:
+                            try:
+                                supplier_contact = "60" + input("Enter the updated supplier contact number: ")
+                                if not len(supplier_contact) == 12 or not supplier_contact.isdigit:
+                                    print("Contact number is invalid")
+                                else:
+                                    break
+                            except ValueError:
+                                print("Invalid input. Contact number must be a number.")
+                        
+                    else:
+                        print("Invalid choice.")
+                        break
+                    data[i] = ", ".join(supplier_details)
+                    updated = True
+                    break
+
+            if updated:
+                write_file(SUPPLIERS_FILE, [line + "\n" for line in data])
+                print("Supplier details updated successfully!")
+            else:
+                print("SID not found.")
+
+        elif choice == '3':  # Exit
+            break
+        else:
+            print("Invalid choice.")
+
 
 def placeorder():
     product_id = "PID" + input("Enter the Product ID of the product you want to order: ")
@@ -305,8 +384,9 @@ def main():
         print("[1] Add a new product")
         print("[2] Update a product")
         print("[3] Add Supplier")
-        print("[4] Place an order")
-        print("[5] View Inventory")
+        print("[4] Update Supplier")
+        print("[5] Place an order")
+        print("[6] View Inventory")
         print("[7] Exit")
 
         try:
@@ -318,9 +398,11 @@ def main():
             elif selection == 3:
                 add_supplier()
             elif selection == 4:
+                up_suppliers()
+            elif selection == 5:
                 placeorder()
                
-            elif selection == 5:
+            elif selection == 6:
                  view_inventory()
             elif selection == 7:
                 print("Exiting the program. Thank you!")
