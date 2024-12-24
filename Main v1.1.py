@@ -1,5 +1,5 @@
 import os
-
+import datetime
 # File paths
 PRODUCTS_FILE = "product.txt"
 SUPPLIERS_FILE = "suppliers.txt"
@@ -261,7 +261,7 @@ def add_supplier():
     while True:
             try:
                 supplier_contact = "60" + input("Enter the supplier contact number: ")
-                if not len(supplier_contact) == 12 or not supplier_contact.isdigit:
+                if not len(supplier_contact) == 12 or not supplier_contact.isdigit():
                     print("Contact number is invalid")
                 else:
                     break
@@ -353,16 +353,26 @@ def up_suppliers():
 
 def placeorder():
     product_id = "PID" + input("Enter the Product ID of the product you want to order: ")
-    quantity = int(input("Enter the quantity of the product you would like to order: "))
+    products=read_products(PRODUCTS_FILE)
+    suppliers=read_suppliers(SUPPLIERS_FILE)
+    orders=read_file(ORDERS_FILE)
+    if product_id not in products:
+        print('Product ID not found')
+        return
     supplier_id = "SID" + input("Enter the Supplier ID of the supplier you want to order from: ")
-    if quantity<=0 :
-        print("Invalid quantity. Please enter a positive number.")
-        return
-
-    suppliers = read_suppliers(SUPPLIERS_FILE)
     if supplier_id not in suppliers:
-        print("Supplier ID not found.")
+        print('Supplier ID not found')
         return
+    
+    while True:
+        try:
+            quantity = int(input("Enter the quantity of the product you would like to order: "))
+            if quantity<=0 :
+                print("Invalid quantity. Please enter a positive number.")
+            else:
+                break
+        except ValueError:
+            print('Invalid Input. Quantity must be an integer.')
     suppliers[supplier_id].append(f"Product ID: {product_id}, Quantity: {quantity}")
 
     products = read_products(PRODUCTS_FILE)
@@ -370,28 +380,39 @@ def placeorder():
         print("Product ID not found.")
         return
 
-    order_id ="OID" +(input("Enter the id of the order"))
-    date = input("Enter the date of order (DD/MM/YYYY)")
-    new_order = (f"{order_id}, Product ID: {product_id}, Quantity: {quantity}, Supplier ID: {supplier_id}, Date: {date})")
-    append_to_file(ORDERS_FILE, new_order)
+    order_ids = {line.split(', ')[0] for line in orders}
+    while True:
+        orderid= "OID"+input('Enter The order ID (e.g., 0001): ')
+        if orderid in order_ids:
+            print('OID already exists. Please Enter a new order ID!')
+        else:
+            break
+    
+    while True:
+        date = input("Enter the date of order (DD/MM/YYYY) ")
+        try:
+            order_date=  datetime.datetime.strptime(date, "%d/%m/%Y").date()
+            break
+        except ValueError:
+            print('Invalid Foramt. Please use DD/MM/YYYY.')
+
     updated=False
-    data=read_products(PRODUCTS_FILE)
+    data=read_file(PRODUCTS_FILE)
     for i, line in enumerate(data):
         product=line.split(', ')
         if product_id == product[0]:
-            ogquantity = product[4]
-            ogquantity = ogquantity.split(':')
-            ogquantitynum=int(ogquantity[1])
-            quantity+=ogquantitynum
-            product[4]='Quantity: '+ str(quantity)
+            current_quantity = int(product[4].split(': ')[1])
+            new_quantity= current_quantity + quantity
+            product[4]=f"quantity: {new_quantity}"
             data[i] = ", ".join(product)
-
             updated=True
-            
+            break
     if updated:
-                write_file(PRODUCTS_FILE, [line + "\n" for line in data])
-                print("Quantitiy updated successfully!")
-
+        write_file(PRODUCTS_FILE, [line + "\n" for line in data])
+        print("Quantitiy updated successfully!")
+    
+    new_order = (f"{order_id}, Product ID: {product_id}, Quantity: {quantity}, Supplier ID: {supplier_id}, Date: {date})")
+    append_to_file(ORDERS_FILE, new_order)
     print("Order placed successfully!")
 
 # Main function to run the program
@@ -417,8 +438,7 @@ def main():
             elif selection == 4:
                 up_suppliers()
             elif selection == 5:
-                placeorder()
-               
+                placeorder() 
             elif selection == 6:
                  view_inventory()
             elif selection == 7:
